@@ -16,13 +16,13 @@ LINE_BREAK = '------------------------------------------------------------------
 
 
 class ArgsEvaluate():
-    def __init__(self, path, epoch):
+    def __init__(self, path):
         # Can manually select the device too
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         self.model_path = path
 
-        self.num_epochs = epoch
+        self.num_epochs = int(path.stem.split("_")[-1])
 
         # Whether to generate networkx format graphs for real datasets
         self.generate_graphs = True
@@ -103,10 +103,9 @@ def print_stats(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", required=True)
-    parser.add_argument("--epoch", type=int, required=True)
     args = parser.parse_args()
 
-    eval_args = ArgsEvaluate(Path(args.path), args.epoch)
+    eval_args = ArgsEvaluate(Path(args.path))
     train_args = eval_args.train_args
 
     graphs = generate_graphs(eval_args)
