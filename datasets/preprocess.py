@@ -215,11 +215,6 @@ def min_dfscodes_to_tensors(min_dfscodes_path, min_dfscode_tensors_path, feature
     for i, _ in enumerate(min_dfscodes):
         filenames.append(f"min_dfscode_tensor-{i}.dat")
 
-    min_dfscodes = []
-    for filename in os.listdir(min_dfscodes_path):
-        if filename.endswith(".dat"):
-            min_dfscodes.append(filename)
-
     with Pool(processes=MAX_WORKERS) as pool:
         for i, _ in tqdm(enumerate(pool.imap_unordered(
                 partial(dfscode_from_file_to_tensor_to_file, min_dfscode_tensors_path=min_dfscode_tensors_path, feature_map=feature_map),
