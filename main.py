@@ -39,6 +39,7 @@ if __name__ == '__main__':
 
     if preprocess:
         graphs = create_graphs(args)
+        exit()
 
     graphs = pickle.load(open(dataset_path / "graphs" / "graphs.dat", 'rb'))
     splits = pickle.load(open(dataset_path / "graphs" / "splits.dat", 'rb'))
