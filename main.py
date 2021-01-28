@@ -46,7 +46,7 @@ if __name__ == '__main__':
     print('Graph type:', args.graph_type)
 
     # Loading the feature map
-    with open(args.current_dataset_path / 'map.dict', 'rb') as f:
+    with open(dataset_path / 'map.dict', 'rb') as f:
         feature_map = pickle.load(f)
 
     print('Max number of nodes: {}'.format(feature_map['max_nodes']))
