@@ -104,17 +104,16 @@ def get_random_bfs_seq(graph):
     return [perm[bfs_seq[i]] for i in range(n)]
 
 
-def graph_to_min_dfscode(graph_file, graphs_path, min_dfscodes_path, temp_path):
-    with open(graphs_path / graph_file, 'rb') as f:
-        G = pickle.load(f)
-        min_dfscode = get_min_dfscode(G, temp_path)
+def graph_to_min_dfscode(data, min_dfscodes_path, temp_path):
+    filename, G = data
+    min_dfscode = get_min_dfscode(G, temp_path)
 
-        if len(G.edges()) == len(min_dfscode):
-            with open(min_dfscodes_path / graph_file, 'wb') as f:
-                pickle.dump(min_dfscode, f)
-        else:
-            print('Error in min dfscode for filename', graph_file)
-            exit()
+    if len(G.edges()) == len(min_dfscode):
+        with open(min_dfscodes_path / filename, 'wb') as f:
+            pickle.dump(min_dfscode, f)
+    else:
+        print('Error in min dfscode for filename', filename)
+        exit()
 
 
 def graphs_to_min_dfscodes(graphs_path, min_dfscodes_path, temp_path):
@@ -124,15 +123,18 @@ def graphs_to_min_dfscodes(graphs_path, min_dfscodes_path, temp_path):
     :param temp_path: path for temporary files
     :return: length of dataset
     """
-    graphs = []
-    for filename in os.listdir(graphs_path):
-        if filename.endswith(".dat"):
-            graphs.append(filename)
+
+    with open(graphs_path / 'graphs.dat', 'rb') as f:
+        graphs = pickle.load(f)
+
+    filenames = []
+    for i, _ in enumerate(graphs):
+        filenames.append(f"min_dfscode-{i}.dat")
 
     with Pool(processes=MAX_WORKERS) as pool:
         for i, _ in tqdm(enumerate(pool.imap_unordered(
             partial(graph_to_min_dfscode, graphs_path=graphs_path, min_dfscodes_path=min_dfscodes_path,
-                    temp_path=temp_path), graphs, chunksize=16), 1)):
+                    temp_path=temp_path), zip(filenames, graphs), chunksize=16), 1)):
             pass
             # if i % 50000 == 0:
             #     print('Processed', i, 'graphs')
