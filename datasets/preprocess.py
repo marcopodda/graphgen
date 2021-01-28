@@ -25,29 +25,27 @@ def mapping(path, dest):
     max_nodes, max_edges, max_degree = 0, 0, 0
     min_nodes, min_edges = float('inf'), float('inf')
 
-    for filename in tqdm(os.listdir(path)):
-        if filename.endswith(".dat"):
-            f = open(path / filename, 'rb')
-            G = pickle.load(f)
-            f.close()
+    with open(path / 'graphs.dat', 'rb') as f:
+        graphs = pickle.load(f)
 
-            max_nodes = max(max_nodes, len(G.nodes()))
-            min_nodes = min(min_nodes, len(G.nodes()))
-            for _, data in G.nodes.data():
-                if data['label'] not in node_forward:
-                    node_forward[data['label']] = node_count
-                    node_backward[node_count] = data['label']
-                    node_count += 1
+    for G in tqdm(graphs):
+        max_nodes = max(max_nodes, len(G.nodes()))
+        min_nodes = min(min_nodes, len(G.nodes()))
+        for _, data in G.nodes.data():
+            if data['label'] not in node_forward:
+                node_forward[data['label']] = node_count
+                node_backward[node_count] = data['label']
+                node_count += 1
 
-            max_edges = max(max_edges, len(G.edges()))
-            min_edges = min(min_edges, len(G.edges()))
-            for _, _, data in G.edges.data():
-                if data['label'] not in edge_forward:
-                    edge_forward[data['label']] = edge_count
-                    edge_backward[edge_count] = data['label']
-                    edge_count += 1
+        max_edges = max(max_edges, len(G.edges()))
+        min_edges = min(min_edges, len(G.edges()))
+        for _, _, data in G.edges.data():
+            if data['label'] not in edge_forward:
+                edge_forward[data['label']] = edge_count
+                edge_backward[edge_count] = data['label']
+                edge_count += 1
 
-            max_degree = max(max_degree, max([d for n, d in G.degree()]))
+        max_degree = max(max_degree, max([d for n, d in G.degree()]))
 
     feature_map = {
         'node_forward': node_forward,
