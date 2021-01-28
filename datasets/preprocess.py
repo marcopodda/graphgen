@@ -104,7 +104,7 @@ def get_random_bfs_seq(graph):
     return [perm[bfs_seq[i]] for i in range(n)]
 
 
-def graph_to_min_dfscode(data, graphs_path, min_dfscodes_path, temp_path):
+def graph_to_min_dfscode(data, min_dfscodes_path, temp_path):
     filename, G = data
     min_dfscode = get_min_dfscode(G, temp_path)
 
@@ -133,7 +133,7 @@ def graphs_to_min_dfscodes(graphs_path, min_dfscodes_path, temp_path):
 
     with Pool(processes=MAX_WORKERS) as pool:
         for i, _ in tqdm(enumerate(pool.imap_unordered(
-            partial(graph_to_min_dfscode, graphs_path=graphs_path, min_dfscodes_path=min_dfscodes_path,
+            partial(graph_to_min_dfscode, min_dfscodes_path=min_dfscodes_path,
                     temp_path=temp_path), zip(filenames, graphs), chunksize=16), 1)):
             pass
             # if i % 50000 == 0:
