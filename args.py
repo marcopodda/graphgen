@@ -1,3 +1,5 @@
+import argparse
+from pathlib import Path
 from datetime import datetime
 import torch
 from utils import get_model_attribute
@@ -8,10 +10,9 @@ class Args:
     Program configuration
     """
 
-    def __init__(self):
+    def __init__(self, dataset_name, epochs):
         # Can manually select the device too
-        self.device = torch.device(
-            'cuda:0' if torch.cuda.is_available() else 'cpu')
+        self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         # Clean tensorboard
         self.clean_tensorboard = False
@@ -26,7 +27,7 @@ class Args:
 
         # Check datasets/process_dataset for datasets
         # Select dataset to train the model
-        self.graph_type = 'Lung'
+        self.graph_type = dataset_name
         self.num_graphs = None  # Set it None to take complete dataset
 
         # Whether to produce networkx format graphs for real datasets
@@ -76,7 +77,7 @@ class Args:
 
         # training config
         self.num_workers = 8  # num workers to load data, default 4
-        self.epochs = 10000
+        self.epochs = epochs
 
         self.lr = 0.003  # Learning rate
         # Learning rate decay factor at each milestone (no. of epochs)
@@ -87,11 +88,11 @@ class Args:
         self.gradient_clipping = True
 
         # Output config
-        self.dir_input = ''
-        self.model_save_path = self.dir_input + 'model_save/'
-        self.tensorboard_path = self.dir_input + 'tensorboard/'
-        self.dataset_path = self.dir_input + 'datasets/'
-        self.temp_path = self.dir_input + 'tmp/'
+        self.dir_input = Path('.')
+        self.model_save_path = self.dir_input / 'model_save'
+        self.tensorboard_path = self.dir_input / 'tensorboard'
+        self.dataset_path = self.dir_input / 'datasets'
+        self.temp_path = self.dir_input / 'tmp'
 
         # Model save and validate parameters
         self.save_model = True
@@ -105,12 +106,11 @@ class Args:
         self.fname = self.note + '_' + self.graph_type
 
         # Calcuated at run time
-        self.current_model_save_path = self.model_save_path + \
-            self.fname + '_' + self.time + '/'
+        self.current_model_save_path = self.model_save_path / f"{self.fname}_{self.time}"
         self.current_dataset_path = None
         self.current_processed_dataset_path = None
         self.current_min_dfscode_path = None
-        self.current_temp_path = self.temp_path + self.fname + '_' + self.time + '/'
+        self.current_temp_path = self.temp_path / f"{self.fname}_{self.time}"
 
         # Model load parameters
         self.load_model = False
@@ -120,8 +120,7 @@ class Args:
 
     def update_args(self):
         if self.load_model:
-            args = get_model_attribute(
-                'saved_args', self.load_model_path, self.load_device)
+            args = get_model_attribute('saved_args', self.load_model_path, self.load_device)
             args.device = self.load_device
             args.load_model = True
             args.load_model_path = self.load_model_path

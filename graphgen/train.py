@@ -111,8 +111,7 @@ def evaluate_loss(args, model, data, feature_map):
 
 def predict_graphs(eval_args):
     train_args = eval_args.train_args
-    feature_map = get_model_attribute(
-        'feature_map', eval_args.model_path, eval_args.device)
+    feature_map = get_model_attribute('feature_map', eval_args.model_path, eval_args.device)
     train_args.device = eval_args.device
 
     model = create_model(train_args, feature_map)
@@ -122,8 +121,7 @@ def predict_graphs(eval_args):
         net.eval()
 
     max_nodes = feature_map['max_nodes']
-    len_node_vec, len_edge_vec = len(
-        feature_map['node_forward']) + 1, len(feature_map['edge_forward']) + 1
+    len_node_vec, len_edge_vec = len(feature_map['node_forward']) + 1, len(feature_map['edge_forward']) + 1
     feature_len = 2 * (max_nodes + 1) + 2 * len_node_vec + len_edge_vec
 
     graphs = []

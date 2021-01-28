@@ -59,6 +59,7 @@ def produce_graphs_from_raw_format(
     index = 0
     count = 0
     graphs_ids = set()
+    graphs = []
     while index < len(lines):
         if lines[index][0][1:] not in graphs_ids:
             graph_id = lines[index][0][1:]
@@ -86,9 +87,7 @@ def produce_graphs_from_raw_format(
                 continue
 
             if nx.is_connected(G):
-                with open(os.path.join(
-                        output_path, 'graph{}.dat'.format(count)), 'wb') as f:
-                    pickle.dump(G, f)
+                graphs.append(G)
 
                 graphs_ids.add(graph_id)
                 count += 1
@@ -100,6 +99,9 @@ def produce_graphs_from_raw_format(
             vert = int(lines[index + 1][0])
             edges = int(lines[index + 2 + vert][0])
             index += vert + edges + 4
+
+        with open(output_path / 'graphs.dat', 'wb') as f:
+            pickle.dump(graphs, f)
 
     return count
 
@@ -152,6 +154,7 @@ def produce_graphs_from_graphrnn_format(
     node_list = np.arange(data_graph_indicator.shape[0]) + 1
 
     count = 0
+    graphs = []
     for i in range(graph_num):
         # find the nodes for each graph
         nodes = node_list[data_graph_indicator == i + 1]
@@ -186,14 +189,15 @@ def produce_graphs_from_graphrnn_format(
 
             nx.set_edge_attributes(G_sub, 'DEFAULT_LABEL', 'label')
 
-            with open(os.path.join(
-                    output_path, 'graph{}.dat'.format(count)), 'wb') as f:
-                pickle.dump(G_sub, f)
+            graphs.append(nx.Graph(G_sub))
 
             count += 1
 
             if num_graphs and count >= num_graphs:
                 break
+
+        with open(output_path / 'graphs.dat', 'wb') as f:
+                pickle.dump(graphs, f)
 
     return count
 
@@ -204,6 +208,7 @@ def sample_subgraphs(
 ):
     count = 0
     deg = G.degree[idx]
+
     for _ in range(num_factor * int(math.sqrt(deg))):
         G_rw = random_walk_with_restart_sampling(
             G, idx, iterations=iterations, max_nodes=max_num_nodes,
@@ -273,15 +278,15 @@ def produce_random_walk_sampled_graphs(
         num_graphs = len(filenames)
 
     count = 0
+    graphs = []
     for i, name in enumerate(filenames[:num_graphs]):
-        os.rename(
-            os.path.join(output_path, name),
-            os.path.join(output_path, 'graph{}.dat'.format(i))
-        )
+        with open(output_path / name, "rb") as f:
+            graphs.append(pickle.load(f))
+        os.remove(output_path / name)
         count += 1
 
-    for name in filenames[num_graphs:]:
-        os.remove(os.path.join(output_path, name))
+    with open(output_path / 'graphs.dat', "wb") as f:
+        pickle.dump(graphs, f)
 
     return count
 
@@ -290,45 +295,45 @@ def produce_random_walk_sampled_graphs(
 def create_graphs(args):
     # Different datasets
     if 'Lung' == args.graph_type:
-        base_path = os.path.join(args.dataset_path, 'Lung/')
-        input_path = base_path + 'lung.txt'
+        base_path = args.dataset_path / 'Lung'
+        input_path = base_path / 'lung.txt'
         min_num_nodes, max_num_nodes = None, 50
         min_num_edges, max_num_edges = None, None
 
     elif 'Breast' == args.graph_type:
-        base_path = os.path.join(args.dataset_path, 'Breast/')
-        input_path = base_path + 'breast.txt'
+        base_path = args.dataset_path / 'Breast'
+        input_path = base_path / 'breast.txt'
         min_num_nodes, max_num_nodes = None, None
         min_num_edges, max_num_edges = None, None
 
     elif 'Leukemia' == args.graph_type:
-        base_path = os.path.join(args.dataset_path, 'Leukemia/')
-        input_path = base_path + 'leukemia.txt'
+        base_path = args.dataset_path / 'Leukemia'
+        input_path = base_path / 'leukemia.txt'
         min_num_nodes, max_num_nodes = None, None
         min_num_edges, max_num_edges = None, None
 
     elif 'Yeast' == args.graph_type:
-        base_path = os.path.join(args.dataset_path, 'Yeast/')
-        input_path = base_path + 'yeast.txt'
+        base_path = args.dataset_path / 'Yeast'
+        input_path = base_path / 'yeast.txt'
         min_num_nodes, max_num_nodes = None, 50
         min_num_edges, max_num_edges = None, None
 
     elif 'All' == args.graph_type:
-        base_path = os.path.join(args.dataset_path, 'All/')
-        input_path = base_path + 'all.txt'
+        base_path = args.dataset_path / 'All'
+        input_path = base_path / 'all.txt'
         # No limit on number of nodes and edges
         min_num_nodes, max_num_nodes = None, None
         min_num_edges, max_num_edges = None, None
 
     elif 'ENZYMES' in args.graph_type:
-        base_path = os.path.join(args.dataset_path, 'ENZYMES/')
+        base_path = args.dataset_path / 'ENZYMES'
         # Node invariants - Options 'Degree' and 'CC'
         node_invariants = ['Degree']
         min_num_nodes, max_num_nodes = None, None
         min_num_edges, max_num_edges = None, None
 
     elif 'citeseer' in args.graph_type:
-        base_path = os.path.join(args.dataset_path, 'citeseer/')
+        base_path = args.dataset_path / 'citeseer'
         random_walk_iterations = 150  # Controls size of graph
         num_factor = 5  # Controls size of dataset
 
@@ -336,7 +341,7 @@ def create_graphs(args):
         min_num_edges, max_num_edges = 20, None
 
     elif 'cora' in args.graph_type:
-        base_path = os.path.join(args.dataset_path, 'cora/')
+        base_path = args.dataset_path / 'cora'
         random_walk_iterations = 150  # Controls size of graph
         num_factor = 5  # Controls size of dataset
 
@@ -347,9 +352,9 @@ def create_graphs(args):
         print('Dataset - {} is not valid'.format(args.graph_type))
         exit()
 
-    args.current_dataset_path = os.path.join(base_path, 'graphs/')
-    args.min_dfscode_path = os.path.join(base_path, 'min_dfscodes/')
-    min_dfscode_tensor_path = os.path.join(base_path, 'min_dfscode_tensors/')
+    args.current_dataset_path = base_path / 'graphs'
+    args.min_dfscode_path = base_path / 'min_dfscodes'
+    min_dfscode_tensor_path = base_path / 'min_dfscode_tensors'
 
     if args.note == 'GraphRNN' or args.note == 'DGMG':
         args.current_processed_dataset_path = args.current_dataset_path
@@ -382,13 +387,11 @@ def create_graphs(args):
 
         print('Graphs produced', count)
     else:
-        count = len([name for name in os.listdir(
-            args.current_dataset_path) if name.endswith(".dat")])
+        count = len([name for name in os.listdir(args.current_dataset_path) if name.endswith(".dat")])
         print('Graphs counted', count)
 
     # Produce feature map
-    feature_map = mapping(args.current_dataset_path,
-                          args.current_dataset_path + 'map.dict')
+    feature_map = mapping(args.current_dataset_path, args.current_dataset_path / 'map.dict')
     print(feature_map)
 
     if args.note == 'DFScodeRNN' and args.produce_min_dfscodes:
@@ -396,8 +399,7 @@ def create_graphs(args):
         mkdir(args.min_dfscode_path)
 
         start = time.time()
-        graphs_to_min_dfscodes(args.current_dataset_path,
-                               args.min_dfscode_path, args.current_temp_path)
+        graphs_to_min_dfscodes(args.current_dataset_path, args.min_dfscode_path, args.current_temp_path)
 
         end = time.time()
         print('Time taken to make dfscodes = {:.3f}s'.format(end - start))

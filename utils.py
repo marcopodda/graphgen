@@ -21,15 +21,11 @@ def load_graphs(graphs_path, graphs_indices=None):
     If graphs_indices are not provided all graphs will be loaded
     """
 
-    graphs = []
     if graphs_indices is None:
-        for name in os.listdir(graphs_path):
-            if not name.endswith('.dat'):
-                continue
-
-            with open(graphs_path + name, 'rb') as f:
-                graphs.append(pickle.load(f))
+        with open(graphs_path + 'graphs.dat', 'rb') as f:
+            graphs = pickle.load(f)
     else:
+        graphs = []
         for ind in graphs_indices:
             with open(graphs_path + 'graph' + str(ind) + '.dat', 'rb') as f:
                 graphs.append(pickle.load(f))
@@ -41,9 +37,8 @@ def save_graphs(graphs_path, graphs):
     """
     Save networkx graphs to a directory with indexing starting from 0
     """
-    for i in range(len(graphs)):
-        with open(graphs_path + 'graph' + str(i) + '.dat', 'wb') as f:
-            pickle.dump(graphs[i], f)
+    with open(graphs_path + 'graphs.dat', 'wb') as f:
+            pickle.dump(graphs, f)
 
 
 # Create Directories for outputs
