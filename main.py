@@ -57,35 +57,13 @@ if __name__ == '__main__':
     dataset_train = Graph_DFS_code_from_file(tensors, splits['train'])
     dataset_validate = Graph_DFS_code_from_file(tensors, splits['val'])
 
+    dataloader_train = DataLoader(
+        dataset_train, batch_size=args.batch_size, shuffle=True, drop_last=True,
+        num_workers=args.num_workers)
+    dataloader_validate = DataLoader(
+        dataset_validate, batch_size=args.batch_size, shuffle=False,
+        num_workers=args.num_workers)
 
-    # if args.note == 'GraphRNN':
-    #     random_bfs = True
-    #     dataset_train = Graph_Adj_Matrix_from_file(
-    #         args, graphs_train, feature_map, random_bfs)
-    #     dataset_validate = Graph_Adj_Matrix_from_file(
-    #         args, graphs_validate, feature_map, random_bfs)
-    # elif args.note == 'DFScodeRNN':
+    model = create_model(args, feature_map)
 
-    # elif args.note == 'DGMG':
-    #     dataset_train = DGMG_Dataset_from_file(args, graphs_train, feature_map)
-    #     dataset_validate = DGMG_Dataset_from_file(
-    #         args, graphs_validate, feature_map)
-
-    # if args.note == 'DGMG':
-    #     dataloader_train = DataLoader(
-    #         dataset_train, batch_size=args.batch_size, shuffle=True, drop_last=True,
-    #         num_workers=args.num_workers, collate_fn=dataset_train.collate_batch)
-    #     dataloader_validate = DataLoader(
-    #         dataset_validate, batch_size=args.batch_size, shuffle=False,
-    #         num_workers=args.num_workers, collate_fn=dataset_validate.collate_batch)
-    # else:
-    #     dataloader_train = DataLoader(
-    #         dataset_train, batch_size=args.batch_size, shuffle=True, drop_last=True,
-    #         num_workers=args.num_workers)
-    #     dataloader_validate = DataLoader(
-    #         dataset_validate, batch_size=args.batch_size, shuffle=False,
-    #         num_workers=args.num_workers)
-
-    # model = create_model(args, feature_map)
-
-    # train(args, dataloader_train, model, feature_map, dataloader_validate)
+    train(args, dataloader_train, model, feature_map, dataloader_validate)
