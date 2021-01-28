@@ -20,10 +20,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset-name", required=True)
     parser.add_argument("--epochs", type=int, required=True)
+    parser.add_argument("--preprocess", action="store_true", default=False)
     args = parser.parse_args()
 
     dataset_name = args.dataset_name
     epochs = args.epochs
+    preprocess = args.preprocess
+
 
     args = Args(dataset_name, epochs)
     args = args.update_args()
@@ -34,7 +37,8 @@ if __name__ == '__main__':
 
     dataset_path = Path('datasets') / dataset_name
 
-    # graphs = create_graphs(args)
+    if preprocess:
+        graphs = create_graphs(args)
 
     graphs = pickle.load(open(dataset_path / "graphs" / "graphs.dat", 'rb'))
     splits = pickle.load(open(dataset_path / "graphs" / "splits.dat", 'rb'))
