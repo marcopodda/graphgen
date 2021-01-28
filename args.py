@@ -96,7 +96,7 @@ class Args:
 
         # Model save and validate parameters
         self.save_model = True
-        self.epochs_save = 20
+        self.epochs_save = 50
         self.epochs_validate = 1
 
         # Time at which code is run
