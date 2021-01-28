@@ -33,9 +33,9 @@ class Args:
         # Whether to produce networkx format graphs for real datasets
         self.produce_graphs = False
         # Whether to produce min dfscode and write to files
-        self.produce_min_dfscodes = True
+        self.produce_min_dfscodes = False
         # Whether to map min dfscodes to tensors and save to files
-        self.produce_min_dfscode_tensors = True
+        self.produce_min_dfscode_tensors = False
 
         # if none, then auto calculate
         self.max_prev_node = None  # max previous node that looks back for GraphRNN

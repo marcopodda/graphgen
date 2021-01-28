@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     random.seed(123)
 
-    # graphs = create_graphs(args)
+    graphs = create_graphs(args)
     splits = args.current_dataset_path / "graphs" / "splits.dat"
 
     graphs = args.current_dataset_path / "graphs" / "graphs.dat"
