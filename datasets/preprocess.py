@@ -27,7 +27,7 @@ def mapping(path, dest):
 
     for filename in tqdm(os.listdir(path)):
         if filename.endswith(".dat"):
-            f = open(path + filename, 'rb')
+            f = open(path / filename, 'rb')
             G = pickle.load(f)
             f.close()
 
