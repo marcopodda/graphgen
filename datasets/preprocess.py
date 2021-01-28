@@ -229,14 +229,14 @@ def min_dfscodes_to_tensors(min_dfscodes_path, min_dfscode_tensors_path, feature
         if filename.endswith(".dat"):
             names.append(filename)
 
-    min_dfscodes = []
+    min_dfscode_tensors = []
     for name in names:
         with open(min_dfscode_tensors_path / name, "rb") as f:
-            min_dfscodes.append(pickle.load(f))
+            min_dfscode_tensors.append(pickle.load(f))
         os.remove(min_dfscode_tensors_path / name)
 
     with open(min_dfscode_tensors_path / 'min_dfscode_tensors.dat', 'wb') as f:
-        pickle.dump(min_dfscode_tensors_path, f)
+        pickle.dump(min_dfscode_tensors, f)
 
 
 def calc_max_prev_node_helper(G):
