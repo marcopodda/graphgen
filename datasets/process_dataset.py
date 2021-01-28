@@ -61,6 +61,7 @@ def produce_graphs_from_raw_format(
     graphs_ids = set()
     graphs = []
     while index < len(lines):
+        print(index)
         if lines[index][0][1:] not in graphs_ids:
             graph_id = lines[index][0][1:]
             G = nx.Graph(id=graph_id)
