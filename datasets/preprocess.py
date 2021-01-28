@@ -212,7 +212,7 @@ def min_dfscodes_to_tensors(min_dfscodes_path, min_dfscode_tensors_path, feature
         min_dfscodes = pickle.load(f)
 
     filenames = []
-    for i, _ in enumerate(min_dfscode_tensors_path):
+    for i, _ in enumerate(min_dfscodes):
         filenames.append(f"min_dfscode_tensor-{i}.dat")
 
     min_dfscodes = []
