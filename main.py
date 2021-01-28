@@ -34,10 +34,10 @@ if __name__ == '__main__':
 
     dataset_path = Path('datasets') / dataset_name
 
-    graphs = create_graphs(args)
-    splits = pickle.load(open(dataset_path / "graphs" / "splits.dat", 'rb'))
+    # graphs = create_graphs(args)
 
     graphs = pickle.load(open(dataset_path / "graphs" / "graphs.dat", 'rb'))
+    splits = pickle.load(open(dataset_path / "graphs" / "splits.dat", 'rb'))
     tensors = pickle.load(open(dataset_path / "min_dfscode_tensors" / "min_dfscode_tensors.dat", 'rb'))
 
     # show graphs statistics
