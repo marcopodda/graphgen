@@ -104,7 +104,7 @@ def get_random_bfs_seq(graph):
     return [perm[bfs_seq[i]] for i in range(n)]
 
 
-def graph_to_min_dfscode(data, min_dfscodes_path, temp_path):
+def graph_to_min_dfscode(data, graphs_path, min_dfscodes_path, temp_path):
     filename, G = data
     min_dfscode = get_min_dfscode(G, temp_path)
 
