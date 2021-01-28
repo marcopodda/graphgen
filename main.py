@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     dataset_path = Path('datasets') / dataset_name
 
-    graphs = create_graphs(args)
+    # graphs = create_graphs(args)
 
     graphs = pickle.load(open(dataset_path / "graphs" / "graphs.dat", 'rb'))
     splits = pickle.load(open(dataset_path / "graphs" / "splits.dat", 'rb'))

@@ -66,8 +66,7 @@ def save_model(epoch, args, model, optimizer=None, scheduler=None, **extra_args)
     if not os.path.isdir(args.current_model_save_path):
         os.makedirs(args.current_model_save_path)
 
-    fname = args.current_model_save_path + \
-        args.fname + '_' + str(epoch) + '.dat'
+    fname = args.current_model_save_path / f"{args.fname}_{epoch}.dat"
     checkpoint = {'saved_args': args, 'epoch': epoch}
 
     save_items = {'model': model}
