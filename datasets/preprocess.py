@@ -237,10 +237,7 @@ def min_dfscodes_to_tensors(min_dfscodes_path, min_dfscode_tensors_path, feature
         pickle.dump(min_dfscode_tensors_path, f)
 
 
-def calc_max_prev_node_helper(idx, graphs_path):
-    with open(graphs_path + 'graph' + str(idx) + '.dat', 'rb') as f:
-        G = pickle.load(f)
-
+def calc_max_prev_node_helper(G):
     max_prev_node = []
     for _ in range(100):
         bfs_seq = get_random_bfs_seq(G)
@@ -261,13 +258,12 @@ def calc_max_prev_node(graphs_path):
     Approximate max_prev_node from simulating bfs sequences
     """
     max_prev_node = []
-    count = len([name for name in os.listdir(
-        graphs_path) if name.endswith(".dat")])
+    with open(graphs_path / 'graphs.dat', 'rb') as f:
+        graphs = pickle.load(f)
 
     max_prev_node = []
     with Pool(processes=MAX_WORKERS) as pool:
-        for max_prev_node_g in tqdm(pool.imap_unordered(
-                partial(calc_max_prev_node_helper, graphs_path=graphs_path), list(range(count)))):
+        for max_prev_node_g in tqdm(pool.imap_unordered(calc_max_prev_node_helper, graphs)):
             max_prev_node.extend(max_prev_node_g)
 
     max_prev_node = sorted(max_prev_node)[-1 * int(0.001 * len(max_prev_node))]
