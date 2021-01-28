@@ -30,12 +30,10 @@ if __name__ == '__main__':
     random.seed(123)
 
     graphs = create_graphs(args)
-    splits = args.current_dataset_path / "graphs" / "splits.dat"
+    splits = pickle.load(open(args.current_dataset_path / "graphs" / "splits.dat", 'rb'))
 
-    graphs = args.current_dataset_path / "graphs" / "graphs.dat"
-    tensors = args.current_dataset_path / "min_dfscode_tensors" / "min_dfscode_tensors.dat"
-
-    # graphs_validate = graphs[int(0.80 * len(graphs)): int(0.90 * len(graphs))]
+    graphs = pickle.load(open(args.current_dataset_path / "graphs" / "graphs.dat", 'rb'))
+    tensors = pickle.load(open(args.current_dataset_path / "min_dfscode_tensors" / "min_dfscode_tensors.dat", 'rb'))
 
     # show graphs statistics
     print('Model:', args.note)
