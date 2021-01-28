@@ -105,12 +105,12 @@ def get_random_bfs_seq(graph):
 
 
 def graph_to_min_dfscode(graph_file, graphs_path, min_dfscodes_path, temp_path):
-    with open(graphs_path + graph_file, 'rb') as f:
+    with open(graphs_path / graph_file, 'rb') as f:
         G = pickle.load(f)
         min_dfscode = get_min_dfscode(G, temp_path)
 
         if len(G.edges()) == len(min_dfscode):
-            with open(min_dfscodes_path + graph_file, 'wb') as f:
+            with open(min_dfscodes_path / graph_file, 'wb') as f:
                 pickle.dump(min_dfscode, f)
         else:
             print('Error in min dfscode for filename', graph_file)
@@ -191,12 +191,12 @@ def dfscode_to_tensor(dfscode, feature_map):
 def dfscode_from_file_to_tensor_to_file(
     min_dfscode_file, min_dfscodes_path, min_dfscode_tensors_path, feature_map
 ):
-    with open(min_dfscodes_path + min_dfscode_file, 'rb') as f:
+    with open(min_dfscodes_path / min_dfscode_file, 'rb') as f:
         min_dfscode = pickle.load(f)
 
     dfscode_tensors = dfscode_to_tensor(min_dfscode, feature_map)
 
-    with open(min_dfscode_tensors_path + min_dfscode_file, 'wb') as f:
+    with open(min_dfscode_tensors_path / min_dfscode_file, 'wb') as f:
         pickle.dump(dfscode_tensors, f)
 
 

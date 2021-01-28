@@ -119,8 +119,7 @@ def produce_graphs_from_graphrnn_format(
     G = nx.Graph()
     # load data
     path = input_path
-    data_adj = np.loadtxt(os.path.join(path, dataset_name + '_A.txt'),
-                          delimiter=',').astype(int)
+    data_adj = np.loadtxt(path/ dataset_name / '_A.txt', delimiter=',').astype(int)
     if node_attributes:
         data_node_att = np.loadtxt(
             os.path.join(path, dataset_name + '_node_attributes.txt'),
