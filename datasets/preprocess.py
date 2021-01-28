@@ -191,14 +191,12 @@ def dfscode_to_tensor(dfscode, feature_map):
 
 
 def dfscode_from_file_to_tensor_to_file(
-    min_dfscode_file, min_dfscodes_path, min_dfscode_tensors_path, feature_map
+    data, min_dfscode_tensors_path, feature_map
 ):
-    with open(min_dfscodes_path / min_dfscode_file, 'rb') as f:
-        min_dfscode = pickle.load(f)
-
+    filename, min_dfscode = data
     dfscode_tensors = dfscode_to_tensor(min_dfscode, feature_map)
 
-    with open(min_dfscode_tensors_path / min_dfscode_file, 'wb') as f:
+    with open(min_dfscode_tensors_path / filename, 'wb') as f:
         pickle.dump(dfscode_tensors, f)
 
 
@@ -209,6 +207,14 @@ def min_dfscodes_to_tensors(min_dfscodes_path, min_dfscode_tensors_path, feature
     :param feature_map:
     :return: length of dataset
     """
+
+    with open(min_dfscodes_path / 'min_dfscodes.dat', 'rb') as f:
+        min_dfscodes = pickle.load(f)
+
+    filenames = []
+    for i, _ in enumerate(min_dfscode_tensors_path):
+        filenames.append(f"min_dfscode_tensor-{i}.dat")
+
     min_dfscodes = []
     for filename in os.listdir(min_dfscodes_path):
         if filename.endswith(".dat"):
@@ -216,9 +222,8 @@ def min_dfscodes_to_tensors(min_dfscodes_path, min_dfscode_tensors_path, feature
 
     with Pool(processes=MAX_WORKERS) as pool:
         for i, _ in tqdm(enumerate(pool.imap_unordered(
-                partial(dfscode_from_file_to_tensor_to_file, min_dfscodes_path=min_dfscodes_path,
-                        min_dfscode_tensors_path=min_dfscode_tensors_path, feature_map=feature_map),
-                min_dfscodes, chunksize=16), 1)):
+                partial(dfscode_from_file_to_tensor_to_file, min_dfscode_tensors_path=min_dfscode_tensors_path, feature_map=feature_map),
+                zip(filenames, min_dfscodes), chunksize=16), 1)):
             pass
 
             # if i % 10000 == 0:
