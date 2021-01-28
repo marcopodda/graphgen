@@ -410,8 +410,7 @@ def create_graphs(args):
         mkdir(min_dfscode_tensor_path)
 
         start = time.time()
-        min_dfscodes_to_tensors(args.min_dfscode_path,
-                                min_dfscode_tensor_path, feature_map)
+        min_dfscodes_to_tensors(args.min_dfscode_path, min_dfscode_tensor_path, feature_map)
 
         end = time.time()
         print('Time taken to make dfscode tensors= {:.3f}s'.format(

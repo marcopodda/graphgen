@@ -31,7 +31,7 @@ class Args:
         self.num_graphs = None  # Set it None to take complete dataset
 
         # Whether to produce networkx format graphs for real datasets
-        self.produce_graphs = True
+        self.produce_graphs = False
         # Whether to produce min dfscode and write to files
         self.produce_min_dfscodes = True
         # Whether to map min dfscodes to tensors and save to files

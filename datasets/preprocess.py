@@ -15,7 +15,7 @@ def mapping(path, dest):
     """
     :param path: path to folder which contains pickled networkx graphs
     :param dest: place where final dictionary pickle file is stored
-    :return: dictionary of 4 dictionary which contains forward 
+    :return: dictionary of 4 dictionary which contains forward
     and backwards mappings of vertices and labels, max_nodes and max_edges
     """
 
@@ -139,6 +139,20 @@ def graphs_to_min_dfscodes(graphs_path, min_dfscodes_path, temp_path):
             # if i % 50000 == 0:
             #     print('Processed', i, 'graphs')
 
+    names = []
+    for filename in os.listdir(min_dfscodes_path):
+        if filename.endswith(".dat"):
+            names.append(filename)
+
+    min_dfscodes = []
+    for name in names:
+        with open(min_dfscodes_path / name, "rb") as f:
+            min_dfscodes.append(pickle.load(f))
+        os.remove(min_dfscodes_path / name)
+
+    with open(min_dfscodes_path / 'min_dfscodes.dat', 'wb') as f:
+        pickle.dump(min_dfscodes, f)
+
     print('Done creating min dfscodes')
 
 
@@ -210,6 +224,20 @@ def min_dfscodes_to_tensors(min_dfscodes_path, min_dfscode_tensors_path, feature
             # if i % 10000 == 0:
             #     print('Processed', i, 'graphs')
 
+    names = []
+    for filename in os.listdir(min_dfscode_tensors_path):
+        if filename.endswith(".dat"):
+            names.append(filename)
+
+    min_dfscodes = []
+    for name in names:
+        with open(min_dfscode_tensors_path / name, "rb") as f:
+            min_dfscodes.append(pickle.load(f))
+        os.remove(min_dfscode_tensors_path / name)
+
+    with open(min_dfscode_tensors_path / 'min_dfscode_tensors.dat', 'wb') as f:
+        pickle.dump(min_dfscode_tensors_path, f)
+
 
 def calc_max_prev_node_helper(idx, graphs_path):
     with open(graphs_path + 'graph' + str(idx) + '.dat', 'rb') as f:
@@ -232,7 +260,7 @@ def calc_max_prev_node_helper(idx, graphs_path):
 
 def calc_max_prev_node(graphs_path):
     """
-    Approximate max_prev_node from simulating bfs sequences 
+    Approximate max_prev_node from simulating bfs sequences
     """
     max_prev_node = []
     count = len([name for name in os.listdir(
