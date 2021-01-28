@@ -6,7 +6,7 @@ import torch
 
 def mkdir(path):
     if os.path.isdir(path):
-        is_del = input('Delete ' + path + ' Y/N:')
+        is_del = input('Delete data dir: Y/N:')
         if is_del.strip().lower() == 'y':
             shutil.rmtree(path)
         else:
@@ -22,7 +22,7 @@ def load_graphs(graphs_path, graphs_indices=None):
     """
 
     if graphs_indices is None:
-        with open(graphs_path + 'graphs.dat', 'rb') as f:
+        with open(graphs_path / 'graphs.dat', 'rb') as f:
             graphs = pickle.load(f)
     else:
         graphs = []
@@ -37,7 +37,7 @@ def save_graphs(graphs_path, graphs):
     """
     Save networkx graphs to a directory with indexing starting from 0
     """
-    with open(graphs_path + 'graphs.dat', 'wb') as f:
+    with open(graphs_path / 'graphs.dat', 'wb') as f:
             pickle.dump(graphs, f)
 
 
