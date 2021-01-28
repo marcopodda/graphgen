@@ -22,7 +22,7 @@ if __name__ == '__main__':
     parser.add_argument("--epochs", type=int, required=True)
     args = parser.parse_args()
 
-    args = Args(args.dataset_name)
+    args = Args(args.dataset_name, args.epochs)
     args = args.update_args()
 
     create_dirs(args)
