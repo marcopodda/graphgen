@@ -22,18 +22,23 @@ if __name__ == '__main__':
     parser.add_argument("--epochs", type=int, required=True)
     args = parser.parse_args()
 
-    args = Args(args.dataset_name, args.epochs)
+    dataset_name = args.dataset_name
+    epochs = args.epochs
+
+    args = Args(dataset_name, epochs)
     args = args.update_args()
 
     create_dirs(args)
 
     random.seed(123)
 
-    graphs = create_graphs(args)
-    splits = pickle.load(open(args.current_dataset_path / "graphs" / "splits.dat", 'rb'))
+    dataset_path = Path('datasets') / dataset_name
 
-    graphs = pickle.load(open(args.current_dataset_path / "graphs" / "graphs.dat", 'rb'))
-    tensors = pickle.load(open(args.current_dataset_path / "min_dfscode_tensors" / "min_dfscode_tensors.dat", 'rb'))
+    graphs = create_graphs(args)
+    splits = pickle.load(open(dataset_path / "graphs" / "splits.dat", 'rb'))
+
+    graphs = pickle.load(open(dataset_path / "graphs" / "graphs.dat", 'rb'))
+    tensors = pickle.load(open(dataset_path / "min_dfscode_tensors" / "min_dfscode_tensors.dat", 'rb'))
 
     # show graphs statistics
     print('Model:', args.note)
