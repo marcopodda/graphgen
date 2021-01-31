@@ -100,7 +100,9 @@ class Args:
         self.epochs_validate = 1
 
         # Time at which code is run
-        self.time = '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
+        self.start_time = datetime.now()
+        self.time = '{0:%Y-%m-%d %H:%M:%S}'.format(self.start_time)
+        self.end_time = None
 
         # Filenames to save intermediate and final outputs
         self.fname = self.note + '_' + self.graph_type

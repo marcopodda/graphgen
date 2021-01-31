@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import torch
 from torch import optim
 from torch.optim.lr_scheduler import MultiStepLR
@@ -131,6 +133,7 @@ def train(args, dataloader_train, model, feature_map, dataloader_validate=None):
                 print('Epoch: {}/{}, validation loss: {:.6f}'.format(
                     epoch, args.epochs, loss_validate))
 
+    args.end_time = datetime.now() - args.start_time
     save_model(epoch, args, model, optimizer,
                scheduler, feature_map=feature_map)
     print('Model Saved - Epoch: {}/{}, train loss: {:.6f}'.format(epoch, args.epochs, loss))
