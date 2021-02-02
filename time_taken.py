@@ -8,8 +8,7 @@ from utils import strfdelta
 
 def time_taken(path):
     args = torch.load(path)['saved_args']
-    delta = args.end_time
-    time_elapsed = strfdelta(delta, "%H:%M%:%S")
+    time_elapsed = strfdelta(args.end_time, "%H:%M:%S")
     filename = path.parent / "time_elapsed.txt"
     with open(filename, "w") as f:
         print(time_elapsed, file=f)
