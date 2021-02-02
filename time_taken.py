@@ -1,13 +1,14 @@
 import argparse
 from pathlib import Path
 
-from evaluate import ArgsEvaluate
+import torch
 
 from utils import strfdelta
 
 
-def time_taken(path, train_args):
-    delta = train_args.end_time
+def time_taken(path):
+    args = torch.load(path)['saved_args']
+    delta = args.end_time
     time_elapsed = strfdelta(delta, "%H:%M%:%S")
     filename = path.parent / "time_elapsed.txt"
     with open(filename, "w") as f:
@@ -20,5 +21,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     path = Path(args.path)
-    eval_args = ArgsEvaluate(path)
-    time_taken(path, eval_args.train_args)
+    time_taken(path)
