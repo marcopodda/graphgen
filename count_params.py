@@ -14,7 +14,7 @@ def count_params(eval_args):
     load_model(eval_args.model_path, eval_args.device, model)
     filename = train_args.current_model_save_path / "num_params.txt"
     num_params = sum([sum(p.numel() for p in model[m].parameters() if p.requires_grad) for m in model])
-    with open(filename, "wb") as f:
+    with open(filename, "w") as f:
         print(num_params, file=f)
 
 
