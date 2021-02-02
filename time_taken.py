@@ -8,7 +8,7 @@ from utils import strfdelta
 
 def time_taken(path, train_args):
     delta = train_args.end_time
-    time_elapsed = strfdelta(delta)
+    time_elapsed = strfdelta(delta, "%H:%M%:%S")
     filename = path.parent / "time_elapsed.txt"
     with open(filename, "w") as f:
         print(time_elapsed, file=f)
